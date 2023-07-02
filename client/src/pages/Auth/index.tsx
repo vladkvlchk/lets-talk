@@ -44,7 +44,7 @@ const Auth: React.FC = () => {
         size: "large",
       }
     );
-  }, []);
+  });
 
   return (
     <div className="w-screen h-screen bg-slate-900 text-center flex text-white justify-center items-center">

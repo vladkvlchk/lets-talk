@@ -18,7 +18,7 @@ const Main: React.FC = () => {
 
   React.useEffect(()=>{
     getData();
-  }, [])
+  })
 
   if (!user.id) {
     return(<Navigate to="./login" />)
