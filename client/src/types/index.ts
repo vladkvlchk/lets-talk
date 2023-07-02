@@ -3,6 +3,7 @@ export type User = {
     firstName: string,
     lastName: string,
     email: string,
+    profile_photo: string,
 };
 
 export interface GoogleDataType {

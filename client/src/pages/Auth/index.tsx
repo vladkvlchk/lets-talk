@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { setUser } from "../../redux/slices/user/slice";
 import { UseAppDispatch } from "../../redux/store";
 import { GoogleDataType } from "../../types";
-import jwt_decode from "jwt-decode";
+import jwt_decode from 'jwt-decode'
 
 const Auth: React.FC = () => {
   const navigate = useNavigate();
@@ -19,6 +19,7 @@ const Auth: React.FC = () => {
           firstName: gData?.given_name,
           lastName: gData?.family_name,
           email: gData?.email,
+          profile_photo: gData?.picture,
         })
       );
 
