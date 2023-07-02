@@ -6,6 +6,7 @@ const initialState: User = {
   firstName: "",
   lastName: "",
   email: "",
+  profile_photo: "",
 };
 
 export const userSlice = createSlice({
@@ -17,6 +18,7 @@ export const userSlice = createSlice({
       state.email = action.payload.email;
       state.firstName = action.payload.firstName;
       state.lastName = action.payload.lastName;
+      state.profile_photo = action.payload.profile_photo;
     },
     clearUser(state) {
       state = initialState;
