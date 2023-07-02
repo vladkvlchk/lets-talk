@@ -4,11 +4,7 @@ const signIn = async (req, res) => {
   try {
     const { id, first_name, last_name, email, profile_photo } = req.body;
     const user = await User.findOne({
-      id,
-      first_name,
-      last_name,
-      email,
-      profile_photo,
+      where: {id}
     });
     if (!user) {
       //new user
@@ -19,7 +15,7 @@ const signIn = async (req, res) => {
         email,
         profile_photo,
       });
-      res.json(user);
+      res.json({ message: "New user", user});
     } else {
       //user exists
       res.json({ message: "User already exists", user });
