@@ -4,6 +4,7 @@ const UserContacts = require("../models/user_contacts");
 const signIn = async (req, res) => {
   try {
     const { id, first_name, last_name, email, profile_photo } = req.body;
+    const last_seen = Date.now();
     const user = await User.findOne({
       where: { id },
     });
@@ -15,6 +16,7 @@ const signIn = async (req, res) => {
         last_name,
         email,
         profile_photo,
+        last_seen,
       });
       res.json({ message: "New user", user });
     } else {
@@ -59,7 +61,7 @@ const addContact = async (req, res) => {
       return res.status(400).send("Error! Your data is invalid");
     }
     if (contactEmail === me.email) {
-        return res.status(400).send("You cannot add yourself as a new contact");
+      return res.status(400).send("You cannot add yourself as a new contact");
     }
 
     const new_contact = await User.findOne({
@@ -101,4 +103,32 @@ const addContact = async (req, res) => {
   }
 };
 
-module.exports = { signIn, deleteUserById, addContact };
+const getMyContacts = async (req, res) => {
+  try {
+    const { contactIds } = await UserContacts.findOne({
+      where: {
+        userId: req.params.id,
+      },
+    });
+    if (!contactIds) {
+      res.status(400).send("You have no contacts");
+    }
+
+    let myContactsInfo = await User.findAll({ where: { id: contactIds } });
+
+    return res.json(
+      myContactsInfo.map((contact) => ({
+        id: contact.id,
+        first_name: contact.first_name,
+        last_name: contact.last_name,
+        profile_photo: contact.profile_photo,
+        last_seen: contact.last_seen
+      }))
+    );
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+module.exports = { signIn, deleteUserById, addContact, getMyContacts };

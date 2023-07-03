@@ -22,3 +22,11 @@ export interface GoogleDataType {
     picture: string;
     sub: string;
   }
+
+export type ContactItemType = {
+    id: string,
+    first_name: string,
+    last_name: string,
+    profile_photo: string,
+    last_seen: string,
+};
