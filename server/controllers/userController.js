@@ -65,7 +65,7 @@ const addContact = async (req, res) => {
       return res.status(400).send("Error! Your data is invalid");
     }
     if (contactEmail === me.email) {
-      return res.status(400).send("You cannot add yourself as a new contact");
+      return res.status(400).send("You cannot add yourself as your contact");
     }
 
     const new_contact = await User.findOne({
@@ -74,7 +74,7 @@ const addContact = async (req, res) => {
       },
     });
     if (!new_contact) {
-      return res.status(500).send("User hasn't visited this app yet :(");
+      return res.status(400).send("This user hasn't visited this app yet :(");
     }
 
     const contacts = await UserContacts.findOne({
@@ -127,7 +127,7 @@ const getMyContacts = async (req, res) => {
         first_name: contact.first_name,
         last_name: contact.last_name,
         profile_photo: contact.profile_photo,
-        last_seen: contact.last_seen
+        last_seen: contact.last_seen,
       }))
     );
   } catch (error) {
