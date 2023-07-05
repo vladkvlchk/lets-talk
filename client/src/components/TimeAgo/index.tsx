@@ -19,20 +19,25 @@ const TimeAgo : React.FC<TimeAgoType> = ({ date }) => {
       const days = Math.floor(hours / 24);
 
       if (days > 0) {
-        setTimeAgo(`${days} day${days > 1 ? 's' : ''} ago`);
+        setTimeAgo(`last seen ${days} day${days > 1 ? 's' : ''} ago`);
       } else if (hours > 0) {
-        setTimeAgo(`${hours} hour${hours > 1 ? 's' : ''} ago`);
+        setTimeAgo(`last seen ${hours} hour${hours > 1 ? 's' : ''} ago`);
       } else if (minutes > 0) {
-        setTimeAgo(`${minutes} minute${minutes > 1 ? 's' : ''} ago`);
+        setTimeAgo(`last seen ${minutes} minute${minutes > 1 ? 's' : ''} ago`);
+      } else if (seconds > 30){
+        // setTimeAgo(`${seconds} second${seconds !== 1 ? 's' : ''} ago`);
+        setTimeAgo('last seen just now');
       } else {
-        setTimeAgo(`${seconds} second${seconds !== 1 ? 's' : ''} ago`);
+        setTimeAgo('online');
       }
     };
 
     calculateTimeAgo();
   }, [date]);
 
-  return <div>{"last seen " + timeAgo}</div>;
+  
+
+  return <div>{"" + timeAgo}</div>;
 };
 
 export default TimeAgo;

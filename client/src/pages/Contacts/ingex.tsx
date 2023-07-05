@@ -2,30 +2,46 @@ import axios from "axios";
 import React from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/slices/user/selectors";
-import { ContactItemType } from "../../types";
+import { AlertType, ContactItemType } from "../../types";
 import ContactItem from "../../components/ContactItem";
 import AddContactModal from "../../components/AddContactModal";
+import { Alert } from "@mui/material";
 
 const Contacts: React.FC = () => {
   const { id } = useSelector(selectUser);
   const [contacts, setContacts] = React.useState<ContactItemType[]>([]);
   const [isOpenAddContact, setIsOpenAddContact] =
     React.useState<boolean>(false);
-
-  const getContacts = async () => {
-    const { data } = await axios.get("http://localhost:5000/my-contacts/" + id);
-    setContacts(data);
-  };
+  const [alert, setAlert] = React.useState<undefined | AlertType>();
 
   React.useEffect(() => {
+    const getContacts = async () => {
+        const { data } = await axios.get("http://localhost:5000/my-contacts/" + id);
+        setContacts(data);
+      };
+    
     getContacts();
   }, []);
 
-  const onOpenAddContacts = () => {setIsOpenAddContact(prev => !prev)}
+  const onAlert = ({severity, text} : AlertType) => {
+    setAlert({severity, text});
+    setTimeout(() => {setAlert(undefined)}, 2500);
+  }
+
+  const onOpenAddContacts = () => {
+    setIsOpenAddContact((prev) => !prev);
+  };
   return (
     <>
-      {isOpenAddContact ? <AddContactModal onClose={onOpenAddContacts} /> : <></>}
-      <button onClick={onOpenAddContacts} className="h-12 flex p-2 justify-center">
+      {isOpenAddContact ? (
+        <AddContactModal onClose={onOpenAddContacts} onAlert={onAlert}/>
+      ) : (
+        <></>
+      )}
+      <button
+        onClick={onOpenAddContacts}
+        className="h-12 flex p-2 justify-center"
+      >
         <svg
           className="flex-none w-14"
           xmlns="http://www.w3.org/2000/svg"
@@ -50,6 +66,9 @@ const Contacts: React.FC = () => {
           id={contact.id}
         />
       ))}
+      {alert && <Alert className="absolute bottom-6 left-6 transition-opacity z-20" variant="filled" severity={alert.severity} onClose={() => {setAlert(undefined)}}>
+        {alert.text}
+      </Alert>}
     </>
   );
 };

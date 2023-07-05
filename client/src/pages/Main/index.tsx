@@ -9,22 +9,28 @@ const Main: React.FC = () => {
   const user = useSelector(selectUser);
 
   const getData = async () => {
-    if(user.id){
-      const { data } = await axios.post('http://localhost:5000/sign-in', {id: user.id, first_name: user.firstName, last_name: user.lastName, email: user.email, profile_photo: user.profile_photo});
+    if (user.id) {
+      const { data } = await axios.post("http://localhost:5000/sign-in", {
+        id: user.id,
+        first_name: user.firstName,
+        last_name: user.lastName,
+        email: user.email,
+        profile_photo: user.profile_photo,
+      });
     }
-  }
+  };
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     getData();
-  }, [])
+  }, []);
 
   if (!user.id) {
-    return(<Navigate to="./login" />)
+    return <Navigate to="./login" />;
   }
 
   return (
-    <div className="w-screen h-screen flex bg-slate-900">
-        <Sidebar />
+    <div className="w-screen h-screen flex bg-slate-900 fixed">
+      <Sidebar />
     </div>
   );
 };
