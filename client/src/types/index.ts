@@ -30,3 +30,7 @@ export type ContactItemType = {
     profile_photo: string,
     last_seen: string,
 };
+
+export type AddContactModalType = {
+    onClose: () => void
+}

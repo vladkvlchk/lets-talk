@@ -18,6 +18,10 @@ const signIn = async (req, res) => {
         profile_photo,
         last_seen,
       });
+      await UserContacts.create({
+        userId: user.id,
+        contactIds: []
+      })
       res.json({ message: "New user", user });
     } else {
       //user exists
@@ -78,17 +82,18 @@ const addContact = async (req, res) => {
         userId: me.id,
       },
     });
+
     if (!contacts) {
       const contacts = await UserContacts.create({
         userId: me.id,
         contactIds: [new_contact.id],
       });
       if (!contacts) {
-        return res.status(500).send("Database does't require");
+        return res.status(500).send("Database does't respond");
       }
       return res.json(contacts);
     } else {
-      const contacts = await UserContacts({
+      const contacts = await UserContacts.findOne({
         where: {
           userId: me.id,
         },
