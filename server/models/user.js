@@ -22,6 +22,10 @@ const User = sequelize.define("user", {
     allowNull: false,
     unique: true,
   },
+  last_seen: {
+    type: DataTypes.DATE,
+    allowNull: false
+  }
 });
 
 module.exports = User;
