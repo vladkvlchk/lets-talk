@@ -40,3 +40,8 @@ export type AlertType = {
   severity: "error" | "warning" | "info" | "success",
   text: string,
 };
+
+export type currentPageType = {
+      type: "empty" | "contact" | "dialogue";
+      id: string;
+    };

@@ -136,4 +136,18 @@ const getMyContacts = async (req, res) => {
   }
 };
 
-module.exports = { signIn, deleteUserById, addContact, getMyContacts };
+const getContact = async (req, res) => {
+  try {
+    const user = await User.findOne({where: {id: req.params.id}});
+    if(!user){
+      res.status(404).send("User is not found");
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal Server Error");
+  }
+}
+
+module.exports = { signIn, deleteUserById, addContact, getMyContacts, getContact };
