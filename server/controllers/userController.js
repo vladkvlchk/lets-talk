@@ -20,8 +20,8 @@ const signIn = async (req, res) => {
       });
       await UserContacts.create({
         userId: user.id,
-        contactIds: []
-      })
+        contactIds: [],
+      });
       res.json({ message: "New user", user });
     } else {
       //user exists
@@ -138,8 +138,8 @@ const getMyContacts = async (req, res) => {
 
 const getContact = async (req, res) => {
   try {
-    const user = await User.findOne({where: {id: req.params.id}});
-    if(!user){
+    const user = await User.findOne({ where: { id: req.params.id } });
+    if (!user) {
       res.status(404).send("User is not found");
     }
 
@@ -148,6 +148,37 @@ const getContact = async (req, res) => {
     console.log(error);
     res.status(500).send("Internal Server Error");
   }
-}
+};
 
-module.exports = { signIn, deleteUserById, addContact, getMyContacts, getContact };
+const removeContact = async (req, res) => {
+  try {
+    const { myId, contactId } = req.body;
+    const myContacts = await UserContacts.findOne({
+      where: {
+        userId: myId,
+      },
+    });
+
+    myContacts.contactIds = myContacts.contactIds.filter(
+      (id) => id !== contactId
+    );
+    myContacts.save();
+
+    if (!(myContacts && myContacts.contactIds)) {
+      return res.status(404).send("Not Found");
+    }
+    return res.status(200).send("User has been deleted successfully");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+module.exports = {
+  signIn,
+  deleteUserById,
+  addContact,
+  getMyContacts,
+  getContact,
+  removeContact,
+};

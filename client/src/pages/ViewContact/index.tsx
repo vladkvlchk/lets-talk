@@ -5,12 +5,14 @@ import { setCurrentPage } from "../../redux/slices/currentPage/slice";
 import { selectCurrentPage } from "../../redux/slices/currentPage/selectors";
 import { ContactItemType } from "../../types";
 import TimeAgo from "../../components/TimeAgo";
+import { selectUser } from "../../redux/slices/user/selectors";
 
 const ViewContact: React.FC = () => {
   const dispatch = useDispatch();
-  const { id } = useSelector(selectCurrentPage);
+  const contactId = useSelector(selectCurrentPage).id;
+  const myId = useSelector(selectUser).id;
   const [contactData, setContactData] = React.useState<ContactItemType>({
-    id,
+    id: contactId,
     first_name: "",
     last_name: "",
     profile_photo: "",
@@ -21,7 +23,9 @@ const ViewContact: React.FC = () => {
   React.useEffect(() => {
     try {
       const getContact = async () => {
-        const { data } = await axios.get(`http://localhost:5000/contact/${id}`);
+        const { data } = await axios.get(
+          `http://localhost:5000/contact/${contactId}`
+        );
         setContactData({
           id: data.id,
           first_name: data.first_name,
@@ -34,10 +38,10 @@ const ViewContact: React.FC = () => {
     } catch (error) {
       console.error(error);
     }
-  }, [id]);
+  }, [contactId]);
 
   const onClickBack = () => {
-    dispatch(setCurrentPage({ type: "dialogue", id }));
+    dispatch(setCurrentPage({ type: "dialogue", id: contactId }));
   };
 
   const onMessages = onClickBack;
@@ -46,8 +50,18 @@ const ViewContact: React.FC = () => {
     setIsMuted((prev) => !prev);
   };
 
-  const onDeleteContact = () => {
-    console.log("firstly develop the endpoint :)");
+  const onDeleteContact = async () => {
+    try {
+      const { data } = await axios.post(
+        "http://localhost:5000/contact/delete",
+        {
+          myId,
+          contactId,
+        }
+      );
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
