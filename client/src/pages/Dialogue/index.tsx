@@ -43,7 +43,7 @@ const Dialogue: React.FC = () => {
     <div className="flex flex-col w-full">
       <header
         onClick={openContact}
-        className="h-14 flex flex-row flex-nowrap w-full overflow-hidden cursor-pointer bg-slate-800 border-b border-slate-600"
+        className="pl-3 h-14 flex flex-row flex-nowrap w-full overflow-hidden cursor-pointer bg-slate-800 border-b border-slate-600"
       >
         <picture className="p-2 flex-none">
           <img

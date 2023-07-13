@@ -19,8 +19,8 @@ const ViewContact: React.FC = () => {
     last_seen: "",
     email: "",
   });
-  const [isMuted, setIsMuted] = React.useState(false);
-  const [isDeleting, setIsDeleting] = React.useState(false);
+  const [isMuted, setIsMuted] = React.useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     try {
