@@ -16,7 +16,7 @@ const Contacts: React.FC = () => {
 
   React.useEffect(() => {
     const getContacts = async () => {
-        const { data } = await axios.get("http://localhost:5000/my-contacts/" + id);
+        const { data } = await axios.get("http://localhost:5000/contacts/all/" + id);
         setContacts(data);
       };
     

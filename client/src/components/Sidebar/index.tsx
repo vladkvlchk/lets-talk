@@ -7,8 +7,8 @@ const Sidebar: React.FC = () => {
   const [currentPage, setCurrentPage] = React.useState("chats");
 
   return (
-    <div className="w-3/12 h-screen bg-slate-800 flex-col">
-      <div className="h-full-16">
+    <div className="w-3/12 h-screen bg-slate-800 flex flex-col border-r border-slate-600">
+      <div className="flex-1">
         <header className="h-16 bg-slate-800 px-4 py-2 shadow-xl">
           <input
             type={"text"}
@@ -26,7 +26,7 @@ const Sidebar: React.FC = () => {
           <></>
         )}
       </div>
-      <footer className="h-16 w-full border-t border-slate-500 flex justify-around">
+      <footer className="h-12 w-full border-t border-slate-500 flex justify-around">
         <button onClick={() => setCurrentPage("contacts")}>
           <svg
             xmlns="http://www.w3.org/2000/svg"

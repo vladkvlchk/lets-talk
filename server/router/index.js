@@ -16,4 +16,6 @@ router.delete("/user/delete", UserController.deleteUserById);
 
 router.get("/chats/:id", MessageController.getGroups);
 
+router.post("/message", MessageController.createMessage);
+
 module.exports = router;

@@ -17,6 +17,9 @@ const Message = sequelize.define("message", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  message_text: {
+    type: DataTypes.STRING,
+  }
 });
 
 module.exports = Message;

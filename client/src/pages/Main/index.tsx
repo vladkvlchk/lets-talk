@@ -6,7 +6,7 @@ import Sidebar from "../../components/Sidebar";
 import axios from "axios";
 import ViewContact from "../ViewContact";
 import { selectCurrentPage } from "../../redux/slices/currentPage/selectors";
-import Dialogue from "../Dialogue";
+import Chat from "../Chat";
 
 const Main: React.FC = () => {
   const user = useSelector(selectUser);
@@ -35,8 +35,13 @@ const Main: React.FC = () => {
   return (
     <div className="w-screen h-screen flex bg-slate-900 fixed">
       <Sidebar />
-      {currentPage?.type === "dialogue" ? <Dialogue /> :
-      currentPage?.type === "contact" ? <ViewContact /> : <></>}
+      {currentPage?.type === "dialogue" ? (
+        <Chat type={"dialogue"} />
+      ) : currentPage?.type === "contact" ? (
+        <ViewContact />
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
