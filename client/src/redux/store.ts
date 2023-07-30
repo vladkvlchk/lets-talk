@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { useDispatch } from 'react-redux'
 import user from './slices/user/slice'
+import currentPage from './slices/currentPage/slice'
 
 export const store = configureStore({
   reducer: {
-    user
+    user,
+    currentPage
   },
 })
 

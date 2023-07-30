@@ -37,7 +37,7 @@ const TimeAgo : React.FC<TimeAgoType> = ({ date }) => {
 
   
 
-  return <div>{"" + timeAgo}</div>;
+  return <div>{timeAgo}</div>;
 };
 
 export default TimeAgo;

@@ -33,10 +33,24 @@ export type ContactItemType = {
 
 export type AddContactModalType = {
   onClose: () => void;
-  onAlert: ({severity, text} : AlertType) => void;
+  onAlert: ({ severity, text }: AlertType) => void;
 };
 
 export type AlertType = {
-  severity: "error" | "warning" | "info" | "success",
-  text: string,
+  severity: "error" | "warning" | "info" | "success";
+  text: string;
+};
+
+export type currentPageType = {
+  type: "empty" | "contact" | "dialogue";
+  id: string;
+};
+
+export type ContactDataType = {
+  id: string;
+  first_name: string;
+  last_name: string;
+  profile_photo: string;
+  last_seen: string;
+  email: string;
 };
