@@ -1,17 +1,15 @@
-import React from "react";
+import React, { useRef } from "react";
 import TimeAgo from "../../components/TimeAgo";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentPage } from "../../redux/slices/currentPage/slice";
-import { ContactItemType } from "../../types";
+import { ChatPageType, ContactItemType, MessageType } from "../../types";
 import { selectCurrentPage } from "../../redux/slices/currentPage/selectors";
 import axios from "axios";
 import socket from "../../socket";
+import { selectUser } from "../../redux/slices/user/selectors";
+import Message from "../../components/Message";
 
-type ChatType = {
-  type: "dialogue" | "group";
-};
-
-const Chat: React.FC<ChatType> = () => {
+const Chat: React.FC<ChatPageType> = () => {
   const dispatch = useDispatch();
   const { id } = useSelector(selectCurrentPage);
   const [contactData, setContactData] = React.useState<ContactItemType>({
@@ -21,7 +19,10 @@ const Chat: React.FC<ChatType> = () => {
     profile_photo: "",
     last_seen: "",
   });
+  const me = useSelector(selectUser);
   const [message, setMessage] = React.useState<string>("");
+  const [messages, setMessages] = React.useState<MessageType[]>([]);
+  const mainRef = useRef(null);
 
   const openContact = () => {
     dispatch(setCurrentPage({ type: "contact", id }));
@@ -40,16 +41,35 @@ const Chat: React.FC<ChatType> = () => {
         });
       };
       getContact();
-      socket.emit("CHAT:ENTER", {chatId: contactData.id})
+      socket.emit("CHAT:ENTER", { chatId: contactData.id });
     } catch (error) {
       console.error(error);
     }
   }, [id]);
 
-  const onSend = () => {
-    socket.emit("CHAT:NEW_MESSAGE", { author: "me", text: message });
-    setMessage('');
+  const onSend = async () => {
+    if (message === '') return 0; //catching empty messages
+
+    const new_message = {
+      from_user: me.id,
+      to_user: contactData.id,
+      chat_id: me.id + '_' + contactData.id,
+      message_text: message,
+    };
+    socket.emit("CHAT:NEW_MESSAGE", new_message);
+    setMessage("");
+    await setMessages(prev => [...prev, {
+      ...new_message,
+      id: Date.now() + new_message.from_user,
+    }]);
+    mainRef.current.scrollTo(0, 99999999999);
   };
+
+  const onKeyPress = (event : React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      onSend();
+    }
+  }
 
   return (
     <div className="flex flex-col w-full">
@@ -73,7 +93,9 @@ const Chat: React.FC<ChatType> = () => {
           </div>
         </div>
       </header>
-      <main className="flex-1"></main>
+      <main ref={mainRef} className="flex-1 flex flex-col overflow-scroll">
+        {messages.map(message => <Message author_name={me.firstName} text={message.message_text} avatarLink={me.profile_photo} time={Date.now()} />)}
+      </main>
       <footer className="bg-slate-800 border-t border-slate-600 h-12 flex">
         <input
           type="text"
@@ -81,8 +103,9 @@ const Chat: React.FC<ChatType> = () => {
           placeholder="Write a message..."
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          onKeyPress={onKeyPress}
         />
-        <button onClick={onSend} className="px-4">
+        <button onClick={onSend} className="px-4" >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="32"
