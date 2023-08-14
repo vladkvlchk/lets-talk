@@ -56,7 +56,7 @@ const deleteUserById = async (req, res) => {
 const addContact = async (req, res) => {
   try {
     const { myId, contactEmail } = req.body;
-    const me = await User.findOne({
+    const me = await UserModel.findOne({
       where: {
         id: myId,
       },

@@ -2,11 +2,13 @@ import { configureStore } from '@reduxjs/toolkit'
 import { useDispatch } from 'react-redux'
 import user from './slices/user/slice'
 import currentPage from './slices/currentPage/slice'
+import cachedUsers from './slices/cachedUsers/slice'
 
 export const store = configureStore({
   reducer: {
     user,
-    currentPage
+    currentPage,
+    cachedUsers,
   },
 })
 
