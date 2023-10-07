@@ -1,40 +1,19 @@
 const { generateMessageId } = require("../helper/generateMessageId");
-const Message = require("../models/message");
-
-const getGroups = async (req, res) => {
-  try {
-    return res.json({
-      chats: [
-        {
-          chat_id: "1",
-          logo: "https://avatars.githubusercontent.com/u/81990282?v=4",
-          chat_name: "Vladik 1",
-          members: ["113287173292628368769", "113287173292628368769"],
-        },
-        {
-          chat_id: "2",
-          logo: "https://avatars.githubusercontent.com/u/81990282?v=4",
-          chat_name: "Vladik 2",
-          members: ["113287173292628368769", "113287173292628368769"],
-        },
-      ],
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Internal Server Error");
-  }
-};
+const MessageModel = require("../models/message");
+const { MessageService } = require("../services");
+const UserService = require("../services").default;
 
 const createMessage = async (req, res) => {
   try {
     const { from_user, to_user, chat_id, message_text } = req.body;
-    const message = await Message.create({
-      message_id: generateMessageId(),
+    
+    const message = await MessageService.createMessage({
       message_text,
       from_user,
       to_user,
       chat_id,
-    });
+    })
+    
 
     res.json(message);
   } catch (error) {
@@ -43,13 +22,15 @@ const createMessage = async (req, res) => {
   }
 };
 
-const sendMessage = async (req, res) => {
+const getMessagesByContactId = async (req, res) => {
   try {
-    console.log("ok");
+    const { contact_id, user_id } = req.query;
+    const obj = await MessageService.getMessagesByContactId(contact_id, user_id);
+    res.json(obj);
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
   }
 };
 
-module.exports = { getGroups, sendMessage, createMessage };
+module.exports = { createMessage, getMessagesByContactId };

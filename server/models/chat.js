@@ -1,10 +1,11 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db");
 
-const Chat = sequelize.define("chat", {
-  chat_id: {
+const ChatModel = sequelize.define("chat", {
+  id: {
     type: DataTypes.STRING,
     allowNull: false,
+    primaryKey: true,
   },
   chat_name: {
     type: DataTypes.STRING,
@@ -13,3 +14,5 @@ const Chat = sequelize.define("chat", {
     type: DataTypes.ARRAY(DataTypes.STRING),
   },
 });
+
+module.exports = ChatModel;

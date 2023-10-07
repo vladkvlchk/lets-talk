@@ -1,7 +1,6 @@
 import React from "react";
 import { ContactItemType } from "../../types";
 import TimeAgo from "../TimeAgo";
-import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCurrentPage } from "../../redux/slices/currentPage/slice";
 
@@ -15,12 +14,12 @@ const ContactItem: React.FC<ContactItemType> = ({
 
   const dispatch = useDispatch();
 
-  const openContact = () => {
+  const openChat = () => {
     dispatch(setCurrentPage({type: 'dialogue', id}));
   }
 
   return (
-    <div onClick={openContact} className="h-14 flex flex-row flex-nowrap w-full overflow-hidden cursor-pointer">
+    <div onClick={openChat} className="h-14 flex flex-row flex-nowrap w-full overflow-hidden cursor-pointer">
       <picture className="p-2 flex-none">
         <img className="rounded-full h-full" alt="avatar" src={profile_photo} />
       </picture>

@@ -1,16 +1,16 @@
-const User = require("../models/user");
-const UserContacts = require("../models/user_contacts");
+const UserModel = require("../models/user");
+const UserContactsModel = require("../models/user_contacts");
 
 const signIn = async (req, res) => {
   try {
     const { id, first_name, last_name, email, profile_photo } = req.body;
     const last_seen = Date.now();
-    const user = await User.findOne({
+    const user = await UserModel.findOne({
       where: { id },
     });
     if (!user) {
       //new user
-      const user = await User.create({
+      const user = await UserModel.create({
         id,
         first_name,
         last_name,
@@ -18,7 +18,7 @@ const signIn = async (req, res) => {
         profile_photo,
         last_seen,
       });
-      await UserContacts.create({
+      await UserContactsModel.create({
         userId: user.id,
         contactIds: [],
       });
@@ -36,7 +36,7 @@ const signIn = async (req, res) => {
 const deleteUserById = async (req, res) => {
   try {
     const { id } = req.body;
-    const user = await User.destroy({
+    const user = await UserModel.destroy({
       where: {
         id,
       },
@@ -68,7 +68,7 @@ const addContact = async (req, res) => {
       return res.status(400).send("You cannot add yourself as your contact");
     }
 
-    const new_contact = await User.findOne({
+    const new_contact = await UserModel.findOne({
       where: {
         email: contactEmail,
       },
@@ -77,14 +77,14 @@ const addContact = async (req, res) => {
       return res.status(400).send("This user hasn't visited this app yet :(");
     }
 
-    const contacts = await UserContacts.findOne({
+    const contacts = await UserContactsModel.findOne({
       where: {
         userId: me.id,
       },
     });
 
     if (!contacts) {
-      const contacts = await UserContacts.create({
+      const contacts = await UserContactsModel.create({
         userId: me.id,
         contactIds: [new_contact.id],
       });
@@ -93,7 +93,7 @@ const addContact = async (req, res) => {
       }
       return res.json(contacts);
     } else {
-      const contacts = await UserContacts.findOne({
+      const contacts = await UserContactsModel.findOne({
         where: {
           userId: me.id,
         },
@@ -110,7 +110,7 @@ const addContact = async (req, res) => {
 
 const getMyContacts = async (req, res) => {
   try {
-    const { contactIds } = await UserContacts.findOne({
+    const { contactIds } = await UserContactsModel.findOne({
       where: {
         userId: req.params.id,
       },
@@ -119,7 +119,7 @@ const getMyContacts = async (req, res) => {
       res.status(400).send("You have no contacts");
     }
 
-    let myContactsInfo = await User.findAll({ where: { id: contactIds } });
+    let myContactsInfo = await UserModel.findAll({ where: { id: contactIds } });
 
     return res.json(
       myContactsInfo.map((contact) => ({
@@ -138,7 +138,7 @@ const getMyContacts = async (req, res) => {
 
 const getContact = async (req, res) => {
   try {
-    const user = await User.findOne({ where: { id: req.params.id } });
+    const user = await UserModel.findOne({ where: { id: req.params.id } });
     if (!user) {
       res.status(404).send("User is not found");
     }
@@ -153,7 +153,7 @@ const getContact = async (req, res) => {
 const removeContact = async (req, res) => {
   try {
     const { myId, contactId } = req.body;
-    const myContacts = await UserContacts.findOne({
+    const myContacts = await UserContactsModel.findOne({
       where: {
         userId: myId,
       },

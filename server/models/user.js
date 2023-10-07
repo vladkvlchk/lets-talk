@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db");
 
-const User = sequelize.define("user", {
+const UserModel = sequelize.define("user", {
   id: {
     type: DataTypes.STRING,
     primaryKey: true,
@@ -28,4 +28,4 @@ const User = sequelize.define("user", {
   }
 });
 
-module.exports = User;
+module.exports = UserModel;

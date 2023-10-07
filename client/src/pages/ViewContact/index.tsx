@@ -57,7 +57,7 @@ const ViewContact: React.FC = () => {
     try {
       setIsDeleting(true);
       const { data } = await axios.post(
-        "http://localhost:5000/contact/delete",
+        `${process.env.REACT_APP_API_URL}/contact/delete`,
         {
           myId,
           contactId,

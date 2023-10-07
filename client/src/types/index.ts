@@ -61,12 +61,9 @@ export type MessageType = {
   to_user?: string,
   chat_id: string,
   message_text: string,
+  createdAt: string;
+  updatedAt: string;
 }
-
-// from_user: me.id,
-// to_user: contactData.id,
-// chat_id: me.id + '_' + contactData.id,
-// message_text: message,
 
 export type ChatPageType = {
   type: "dialogue" | "group";

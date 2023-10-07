@@ -19,6 +19,7 @@ const Chat: React.FC<ChatPageType> = () => {
     profile_photo: "",
     last_seen: "",
   });
+  const [chatId, setChatId] = React.useState<string>("");
   const me = useSelector(selectUser);
   const [message, setMessage] = React.useState<string>("");
   const [messages, setMessages] = React.useState<MessageType[]>([]);
@@ -31,8 +32,10 @@ const Chat: React.FC<ChatPageType> = () => {
   React.useEffect(() => {
     try {
       const getContact = async () => {
-        const { data } = await axios.get(`http://localhost:5000/contact/${id}`);
-        setContactData({
+        const { data } = await axios.get(
+          `${process.env.REACT_APP_API_URL}/contact/${id}`
+        );
+        await setContactData({
           id: data.id,
           first_name: data.first_name,
           last_name: data.last_name,
@@ -40,36 +43,72 @@ const Chat: React.FC<ChatPageType> = () => {
           last_seen: data.last_seen,
         });
       };
+
+      const getMessages = async () => {
+        const { data } = await axios.get(
+          `${process.env.REACT_APP_API_URL}/messages`,
+          {
+            params: {
+              contact_id: id,
+              user_id: me.id,
+            },
+          }
+        );
+
+        await setMessages(data.messages);
+        await setChatId(data.chat_id);
+        socket.emit("CHAT:JOIN", { chat_id: data.chat_id });
+      };
+
       getContact();
-      socket.emit("CHAT:ENTER", { chatId: contactData.id });
+      getMessages();
+
+      socket.on("CHAT:NEW_MESSAGE", async (new_message) => {
+        console.log("new message");
+        await setMessages((prev) => {
+          return [...prev, new_message];
+        });
+        mainRef.current.scrollTo(0, 99999999999);
+      });
     } catch (error) {
       console.error(error);
     }
   }, [id]);
 
   const onSend = async () => {
-    if (message === '') return 0; //catching empty messages
+    try {
+      if (message === "") return 0; //catching empty messages
 
-    const new_message = {
-      from_user: me.id,
-      to_user: contactData.id,
-      chat_id: me.id + '_' + contactData.id,
-      message_text: message,
-    };
-    socket.emit("CHAT:NEW_MESSAGE", new_message);
-    setMessage("");
-    await setMessages(prev => [...prev, {
-      ...new_message,
-      id: Date.now() + new_message.from_user,
-    }]);
-    mainRef.current.scrollTo(0, 99999999999);
+      const new_message = {
+        from_user: me.id,
+        to_user: contactData.id,
+        chat_id: chatId,
+        message_text: message,
+      };
+
+      socket.emit("CHAT:NEW_MESSAGE", new_message);
+      setMessages((prev) => [
+        ...prev,
+        {
+          ...new_message,
+          id: new Date().toISOString(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        },
+      ]);
+      setMessage("");
+
+      mainRef.current.scrollTo(0, 9999999999);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const onKeyPress = (event : React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
       onSend();
     }
-  }
+  };
 
   return (
     <div className="flex flex-col w-full">
@@ -94,7 +133,23 @@ const Chat: React.FC<ChatPageType> = () => {
         </div>
       </header>
       <main ref={mainRef} className="flex-1 flex flex-col overflow-scroll">
-        {messages.map(message => <Message author_name={me.firstName} text={message.message_text} avatarLink={me.profile_photo} time={Date.now()} />)}
+        {messages.map((message) => (
+          <Message
+            key={message.id}
+            author_name={
+              message.from_user === me.id
+                ? me.firstName
+                : contactData.first_name
+            }
+            text={message.message_text}
+            avatarLink={
+              message.from_user === me.id
+                ? me.profile_photo
+                : contactData.profile_photo
+            }
+            time={message.createdAt}
+          />
+        ))}
       </main>
       <footer className="bg-slate-800 border-t border-slate-600 h-12 flex">
         <input
@@ -103,9 +158,9 @@ const Chat: React.FC<ChatPageType> = () => {
           placeholder="Write a message..."
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          onKeyPress={onKeyPress}
+          onKeyPress={handleKeyPress}
         />
-        <button onClick={onSend} className="px-4" >
+        <button onClick={onSend} className="px-4">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="32"

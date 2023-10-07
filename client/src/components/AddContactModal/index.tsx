@@ -24,7 +24,7 @@ const AddContactModal: React.FC<AddContactModalType> = ({ onClose, onAlert }) =>
 
   const addContact = async (contactEmail: string) => {
     try{
-        const { data } = await axios.post('http://localhost:5000/contact/add', { myId, contactEmail })
+        const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/contact/add`, { myId, contactEmail })
         console.log(data);
         onClose();
         onAlert({severity: "success", text: "The contact has been added successfully"});

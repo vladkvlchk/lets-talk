@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db");
 
-const Message = sequelize.define("message", {
+const MessageModel = sequelize.define("message", {
   message_id: {
     type: DataTypes.STRING,
     primaryKey: true,
@@ -22,4 +22,4 @@ const Message = sequelize.define("message", {
   }
 });
 
-module.exports = Message;
+module.exports = MessageModel;

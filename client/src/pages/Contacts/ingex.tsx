@@ -16,17 +16,21 @@ const Contacts: React.FC = () => {
 
   React.useEffect(() => {
     const getContacts = async () => {
-        const { data } = await axios.get("http://localhost:5000/contacts/all/" + id);
-        setContacts(data);
-      };
-    
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API_URL}/contacts/all/` + id
+      );
+      setContacts(data);
+    };
+
     getContacts();
   }, []);
 
-  const onAlert = ({severity, text} : AlertType) => {
-    setAlert({severity, text});
-    setTimeout(() => {setAlert(undefined)}, 2500);
-  }
+  const onAlert = ({ severity, text }: AlertType) => {
+    setAlert({ severity, text });
+    setTimeout(() => {
+      setAlert(undefined);
+    }, 2500);
+  };
 
   const onOpenAddContacts = () => {
     setIsOpenAddContact((prev) => !prev);
@@ -34,7 +38,7 @@ const Contacts: React.FC = () => {
   return (
     <>
       {isOpenAddContact ? (
-        <AddContactModal onClose={onOpenAddContacts} onAlert={onAlert}/>
+        <AddContactModal onClose={onOpenAddContacts} onAlert={onAlert} />
       ) : (
         <></>
       )}
@@ -66,9 +70,18 @@ const Contacts: React.FC = () => {
           id={contact.id}
         />
       ))}
-      {alert && <Alert className="absolute bottom-6 left-6 transition-opacity z-20" variant="filled" severity={alert.severity} onClose={() => {setAlert(undefined)}}>
-        {alert.text}
-      </Alert>}
+      {alert && (
+        <Alert
+          className="absolute bottom-6 left-6 transition-opacity z-20"
+          variant="filled"
+          severity={alert.severity}
+          onClose={() => {
+            setAlert(undefined);
+          }}
+        >
+          {alert.text}
+        </Alert>
+      )}
     </>
   );
 };

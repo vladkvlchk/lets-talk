@@ -14,14 +14,18 @@ const Main: React.FC = () => {
 
   React.useEffect(() => {
     const getData = async () => {
-      if (user.id) {
-        const { data } = await axios.post("http://localhost:5000/sign-in", {
-          id: user.id,
-          first_name: user.firstName,
-          last_name: user.lastName,
-          email: user.email,
-          profile_photo: user.profile_photo,
-        });
+      try{
+        if (user.id) {
+          const response = await axios.post(`${process.env.REACT_APP_API_URL}/sign-in`, {
+            id: user.id,
+            first_name: user.firstName,
+            last_name: user.lastName,
+            email: user.email,
+            profile_photo: user.profile_photo,
+          });
+        }
+      } catch (e) {
+        console.error(e);
       }
     };
 
