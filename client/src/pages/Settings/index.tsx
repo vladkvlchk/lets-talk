@@ -63,6 +63,7 @@ const Settings: React.FC = () => {
           title={folder.title}
           ico={folder.ico}
           icoColor={folder.icoColor}
+          opened={false}
         />
       ))}
     </div>
