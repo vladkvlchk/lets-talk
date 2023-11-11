@@ -33,6 +33,17 @@ const getMessagesByContactId = async (contact_id, user_id) => {
   return {chat_id: chat.id, messages};
 };
 
+const getMessagesByChatId = async (chat_id) => {
+  //if chat exists lets get messages
+  const messages = await MessageModel.findAll({
+    where: {
+      chat_id
+    }
+  })
+
+  return { chat_id, messages }
+}
+
 const createMessage = async (message) => {
   const new_message = await MessageModel.create({
     message_id: generateMessageId(),

@@ -33,4 +33,14 @@ const getMessagesByContactId = async (req, res) => {
   }
 };
 
+const getMessagesByChatId = async (req, res) => {
+  try{
+    const { chat_id } = req.query;
+    const obj = await MessageService.getMessagesByChatId(chat_id)
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+}
+
 module.exports = { createMessage, getMessagesByContactId };

@@ -60,7 +60,7 @@ const getChatsByMemberId = async (req, res) => {
           previewChat.data.last_message.text = messages.pop().message_text;
           previewChat.data.last_message.time = messages.pop().createdAt;
         }
-        else console.log('======== messages not found ========')
+        else console.log('======== messages are not found ========')
 
         return previewChat;
       })
