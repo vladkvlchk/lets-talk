@@ -2,7 +2,6 @@ const ChatService = require("./chatService");
 const ChatModel = require("../models/chat");
 const MessageModel = require("../models/message");
 const generateMessageId = require("../helper/generateMessageId");
-const { Op } = require('sequelize');
 
 const getMessagesByContactId = async (contact_id, user_id) => {
   let chat = await ChatModel.findOne({
