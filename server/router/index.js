@@ -15,6 +15,7 @@ router.post("/contact/delete", UserController.removeContact);
 router.delete("/user/delete", UserController.deleteUserById);
 
 router.get("/chats/:id", ChatController.getChatsByMemberId);
+router.get("/chat/messages/:id", ChatController.getMessagesByChatId)
 
 router.get("/messages", MessageController.getMessagesByContactId);
 router.post("/message", MessageController.createMessage);

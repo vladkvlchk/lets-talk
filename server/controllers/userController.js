@@ -140,7 +140,7 @@ const getContact = async (req, res) => {
   try {
     const user = await UserModel.findOne({ where: { id: req.params.id } });
     if (!user) {
-      res.status(404).send("User is not found");
+      return res.status(404).send("User is not found");
     }
 
     res.json(user);

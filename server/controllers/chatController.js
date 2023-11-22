@@ -56,21 +56,35 @@ const getChatsByMemberId = async (req, res) => {
 
         
         if (messages.length) {
-          console.log("------ messages: ", messages);
+          console.log("------ messages.length: ", messages.length);
           previewChat.data.last_message.text = messages.pop().message_text;
           previewChat.data.last_message.time = messages.pop().createdAt;
         }
-        else console.log('======== messages are not found ========')
+        else {
+          console.log('======== messages are not found ========')
+        }
 
         return previewChat;
       })
     );
+
     return res.json(previewChats);
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
   }
 };
+
+const getMessagesByChatId = async (req, res) => {
+  try{
+    const chat_id = req.params.id;
+
+  } catch (error){
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+
+}
 
 module.exports = { getChatsByMemberId };
 
