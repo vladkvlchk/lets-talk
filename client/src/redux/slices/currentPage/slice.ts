@@ -1,19 +1,21 @@
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { currentPageType } from "../../../types";
+import { ChatPageType } from "../../../types";
 
-const initialState: currentPageType = {
+const initialState: ChatPageType = {
   type: "empty" ,
-  id: ""
+  chat_id: "",
+  contact_id: "",
 };
 
 export const currentPageSlice = createSlice({
   name: "currentPage",
   initialState,
   reducers: {
-    setCurrentPage(state, action: PayloadAction<currentPageType>) {
+    setCurrentPage(state, action: PayloadAction<ChatPageType>) {
       state.type = action.payload.type;
-      state.id = action.payload.id;
+      state.chat_id = action.payload.chat_id;
+      state.contact_id = action.payload.contact_id;
     },
   },
 });

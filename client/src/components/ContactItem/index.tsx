@@ -15,7 +15,7 @@ const ContactItem: React.FC<ContactItemType> = ({
   const dispatch = useDispatch();
 
   const openChat = () => {
-    dispatch(setCurrentPage({type: 'dialogue', id}));
+    dispatch(setCurrentPage({type: 'dialogue', chat_id: null, contact_id: id}));
   }
 
   return (

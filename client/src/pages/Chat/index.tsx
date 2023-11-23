@@ -11,9 +11,9 @@ import Message from "../../components/Message";
 
 const Chat: React.FC<ChatPageType> = () => {
   const dispatch = useDispatch();
-  const { id } = useSelector(selectCurrentPage);
+  const { contact_id, chat_id } = useSelector(selectCurrentPage);
   const [contactData, setContactData] = React.useState<ContactItemType>({
-    id,
+    id: contact_id,
     first_name: "",
     last_name: "",
     profile_photo: "",
@@ -26,14 +26,15 @@ const Chat: React.FC<ChatPageType> = () => {
   const mainRef = useRef(null);
 
   const openContact = () => {
-    dispatch(setCurrentPage({ type: "contact", id }));
+    dispatch(setCurrentPage({ type: "contact", contact_id, chat_id: null }));
   };
 
   React.useEffect(() => {
+    // necessary to create 2 scripts (for chat_id and for contact_id)
     try {
       const getContact = async () => {
         const { data } = await axios.get(
-          `${process.env.REACT_APP_API_URL}/contact/${id}`
+          `${process.env.REACT_APP_API_URL}/contact/${contact_id}`
         );
         await setContactData({
           id: data.id,
@@ -49,7 +50,7 @@ const Chat: React.FC<ChatPageType> = () => {
           `${process.env.REACT_APP_API_URL}/messages`,
           {
             params: {
-              contact_id: id,
+              contact_id,
               user_id: me.id,
             },
           }
@@ -73,7 +74,7 @@ const Chat: React.FC<ChatPageType> = () => {
     } catch (error) {
       console.error(error);
     }
-  }, [id]);
+  }, [contact_id, chat_id]);
 
   const onSend = async () => {
     try {

@@ -1,6 +1,9 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { setCurrentPage } from "../../redux/slices/currentPage/slice";
 
 type ChatItemType = {
+  id: string;
   first_name: string;
   last_name: string;
   profile_photo: string;
@@ -11,12 +14,17 @@ type ChatItemType = {
 };
 
 const ChatItem: React.FC<ChatItemType> = ({
+  id,
   first_name,
   last_name,
   profile_photo,
   last_message
 }) => {
-  const openChat = () => {};
+  const dispatch = useDispatch();
+
+  const openChat = () => {
+    dispatch(setCurrentPage({type: 'dialogue', chat_id: id, contact_id: null}));
+  };
 
   return (
     <div

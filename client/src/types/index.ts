@@ -66,5 +66,7 @@ export type MessageType = {
 }
 
 export type ChatPageType = {
-  type: "dialogue" | "group";
+  type: "empty" | "dialogue" | "group" | "settings" | "contact";
+  contact_id: string | null;
+  chat_id: string | null;
 };

@@ -10,8 +10,7 @@ import { Alert } from "@mui/material";
 const Contacts: React.FC = () => {
   const { id } = useSelector(selectUser);
   const [contacts, setContacts] = React.useState<ContactItemType[]>([]);
-  const [isOpenAddContact, setIsOpenAddContact] =
-    React.useState<boolean>(false);
+  const [isOpenAddContact, setIsOpenAddContact] = React.useState<boolean>(false);
   const [alert, setAlert] = React.useState<undefined | AlertType>();
 
   React.useEffect(() => {
