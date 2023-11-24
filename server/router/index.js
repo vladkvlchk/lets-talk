@@ -3,9 +3,6 @@ const { UserController, MessageController, ChatController } = require("../contro
 
 const router = new Router();
 
-router.get("/hello", (req, res) => {
-  res.json({ message: "hello" });
-});
 router.post("/sign-in", UserController.signIn);
 
 router.get("/contact/:id", UserController.getContact);
@@ -17,8 +14,8 @@ router.delete("/user/delete", UserController.deleteUserById);
 router.get("/chats/:id", ChatController.getChatsByMemberId);
 router.get("/chat/messages/:id", MessageController.getMessagesByChatId);
 
-router.get("/messages/byContactId", MessageController.getMessagesByContactId);
-router.get("/messages/byChatId", MessageController.getMessagesByChatId);
+router.get("/messages/by-contact-id", MessageController.getMessagesByContactId);
+router.get("/messages/by-chat-id", MessageController.getMessagesByChatId);
 router.post("/message", MessageController.createMessage);
 
 module.exports = router;

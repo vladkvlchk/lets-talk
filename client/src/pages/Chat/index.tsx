@@ -4,14 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCurrentPage } from "../../redux/slices/currentPage/slice";
 import { ChatPageType, ContactItemType, MessageType } from "../../types";
 import { selectCurrentPage } from "../../redux/slices/currentPage/selectors";
-import axios from "axios";
+import axios from "../../axios";
 import socket from "../../socket";
 import { selectUser } from "../../redux/slices/user/selectors";
 import Message from "../../components/Message";
 
 const Chat: React.FC<ChatPageType> = () => {
   const dispatch = useDispatch();
-  const { contact_id, chat_id } = useSelector(selectCurrentPage);
+  const { type, contact_id, chat_id } = useSelector(selectCurrentPage);
   const [contactData, setContactData] = React.useState<ContactItemType>({
     id: contact_id,
     first_name: "",
@@ -32,9 +32,9 @@ const Chat: React.FC<ChatPageType> = () => {
   React.useEffect(() => {
     // necessary to create 2 scripts (for chat_id and for contact_id)
     try {
-      const getContact = async () => {
+      const getContactByContactId = async () => {
         const { data } = await axios.get(
-          `${process.env.REACT_APP_API_URL}/contact/${contact_id}`
+          `/contact/${contact_id}`
         );
         await setContactData({
           id: data.id,
@@ -45,9 +45,16 @@ const Chat: React.FC<ChatPageType> = () => {
         });
       };
 
-      const getMessages = async () => {
+      const getContactByChatId = async () => {
+        const { data } = await axios.get(`/contact/`)
+      }
+
+      const getChatByChatId = async () => {}
+      const getMessagesByChatId = async () => {}
+
+      const getMessagesByContactId = async () => {
         const { data } = await axios.get(
-          `${process.env.REACT_APP_API_URL}/messages`,
+          `/messages`,
           {
             params: {
               contact_id,
@@ -61,11 +68,20 @@ const Chat: React.FC<ChatPageType> = () => {
         socket.emit("CHAT:JOIN", { chat_id: data.chat_id });
       };
 
-      getContact();
-      getMessages();
+      if(contact_id){
+        getContactByContactId();
+        getMessagesByContactId();
+      } else if (chat_id){
+        if (type === "dialogue"){
+          getContactByChatId();
+        } else if (type === "group"){
+          getChatByChatId();
+        }
+
+        getMessagesByChatId();
+      }
 
       socket.on("CHAT:NEW_MESSAGE", async (new_message) => {
-        console.log("new message");
         await setMessages((prev) => {
           return [...prev, new_message];
         });
