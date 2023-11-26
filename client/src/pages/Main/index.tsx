@@ -40,7 +40,7 @@ const Main: React.FC = () => {
     <div className="w-screen h-screen flex bg-slate-900 fixed">
       <Sidebar />
       {currentPage?.type === "dialogue" ? (
-        <Chat type={"dialogue"} />
+        <Chat />
       ) : currentPage?.type === "contact" ? (
         <ViewContact />
       ) : (

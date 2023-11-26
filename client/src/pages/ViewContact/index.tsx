@@ -9,7 +9,7 @@ import { selectUser } from "../../redux/slices/user/selectors";
 
 const ViewContact: React.FC = () => {
   const dispatch = useDispatch();
-  const contactId = useSelector(selectCurrentPage).id;
+  const contactId = useSelector(selectCurrentPage).contact_id;
   const myId = useSelector(selectUser).id;
   const [contactData, setContactData] = React.useState<ContactDataType>({
     id: contactId,
@@ -44,7 +44,7 @@ const ViewContact: React.FC = () => {
   }, [contactId]);
 
   const onClickBack = () => {
-    dispatch(setCurrentPage({ type: "dialogue", id: contactId }));
+    dispatch(setCurrentPage({ type: "dialogue", contact_id: contactId, chat_id: null }));
   };
 
   const onMessages = onClickBack;

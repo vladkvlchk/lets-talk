@@ -41,6 +41,7 @@ class ChatController {
           const anotherMember = await UserModel.findOne({
             where: { id: anotherMemberId },
           });
+          if(!anotherMember) throw new Error("The second chat member was not found")
           //take it in result object
           previewChat.data.first_name = anotherMember.first_name;
           previewChat.data.last_name = anotherMember.last_name;

@@ -9,7 +9,7 @@ import socket from "../../socket";
 import { selectUser } from "../../redux/slices/user/selectors";
 import Message from "../../components/Message";
 
-const Chat: React.FC<ChatPageType> = () => {
+const Chat: React.FC = () => {
   const dispatch = useDispatch();
   const { type, contact_id, chat_id } = useSelector(selectCurrentPage);
   const [contactData, setContactData] = React.useState<ContactItemType>({
@@ -33,9 +33,7 @@ const Chat: React.FC<ChatPageType> = () => {
     // necessary to create 2 scripts (for chat_id and for contact_id)
     try {
       const getContactByContactId = async () => {
-        const { data } = await axios.get(
-          `/contact/${contact_id}`
-        );
+        const { data } = await axios.get(`/contact/${contact_id}`);
         await setContactData({
           id: data.id,
           first_name: data.first_name,
@@ -46,35 +44,37 @@ const Chat: React.FC<ChatPageType> = () => {
       };
 
       const getContactByChatId = async () => {
-        const { data } = await axios.get(`/contact/`)
-      }
+        const { data } = await axios.get(`/contact/by-chat-id`, {
+          params: {
+            contact_id,
+            user_id: me.id,
+          },
+        });
+      };
 
-      const getChatByChatId = async () => {}
-      const getMessagesByChatId = async () => {}
+      const getChatByChatId = async () => {};
+      const getMessagesByChatId = async () => {};
 
       const getMessagesByContactId = async () => {
-        const { data } = await axios.get(
-          `/messages`,
-          {
-            params: {
-              contact_id,
-              user_id: me.id,
-            },
-          }
-        );
+        const { data } = await axios.get(`/messages`, {
+          params: {
+            contact_id,
+            user_id: me.id,
+          },
+        });
 
         await setMessages(data.messages);
         await setChatId(data.chat_id);
         socket.emit("CHAT:JOIN", { chat_id: data.chat_id });
       };
 
-      if(contact_id){
+      if (contact_id) {
         getContactByContactId();
         getMessagesByContactId();
-      } else if (chat_id){
-        if (type === "dialogue"){
+      } else if (chat_id) {
+        if (type === "dialogue") {
           getContactByChatId();
-        } else if (type === "group"){
+        } else if (type === "group") {
           getChatByChatId();
         }
 
