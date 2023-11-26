@@ -13,6 +13,16 @@ class ChatService {
     });
     return chat;
   };
+
+  getChatById = async (id) => {
+    const chat = await ChatModel.findOne({
+      where: {
+        id
+      }
+    });
+    if(!chat) throw new Error('chat was not found');
+    return chat;
+  }
 }
 
 module.exports = new ChatService();

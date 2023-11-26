@@ -1,5 +1,6 @@
 const UserModel = require("../models/user");
 const UserContactsModel = require("../models/user_contacts");
+const { MessageService, UserService } = require("../services");
 
 class UserController {
   signIn = async (req, res) => {
@@ -147,6 +148,18 @@ class UserController {
       }
 
       res.json(user);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send(error.message);
+    }
+  };
+
+  getContactByChatId = async (req, res) => {
+    try {
+      const { chat_id, user_id } = req.body;
+      const contact = await UserService.getContactByChatId(chat_id, user_id)
+
+      res.json(contact);
     } catch (error) {
       console.log(error);
       res.status(500).send(error.message);
