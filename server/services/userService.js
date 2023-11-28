@@ -15,7 +15,6 @@ class UserService {
   }
 
   getContactByChatId = async (chat_id, user_id) => {
-    console.log('111');
     const { members } = await ChatService.getChatById(chat_id);
     const contact_id = members[0] !== user_id ? members[0] : members[1];
     const contact = await this.getUserById(contact_id);

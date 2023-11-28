@@ -1,13 +1,15 @@
 import React, { useRef } from "react";
-import TimeAgo from "../../components/TimeAgo";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentPage } from "../../redux/slices/currentPage/slice";
-import { ChatPageType, ContactItemType, MessageType } from "../../types";
-import { selectCurrentPage } from "../../redux/slices/currentPage/selectors";
+
 import axios from "../../axios";
 import socket from "../../socket";
-import { selectUser } from "../../redux/slices/user/selectors";
+import TimeAgo from "../../components/TimeAgo";
 import Message from "../../components/Message";
+import { ContactItemType, MessageType } from "../../types";
+
+import { setCurrentPage } from "../../redux/slices/currentPage/slice";
+import { selectCurrentPage } from "../../redux/slices/currentPage/selectors";
+import { selectUser } from "../../redux/slices/user/selectors";
 
 const Chat: React.FC = () => {
   const dispatch = useDispatch();
@@ -30,7 +32,6 @@ const Chat: React.FC = () => {
   };
 
   React.useEffect(() => {
-    // necessary to create 2 scripts (for chat_id and for contact_id)
     try {
       const getContactByContactId = async () => {
         const { data } = await axios.get(`/contact/${contact_id}`);
@@ -46,17 +47,29 @@ const Chat: React.FC = () => {
       const getContactByChatId = async () => {
         const { data } = await axios.get(`/contact/by-chat-id`, {
           params: {
-            contact_id,
+            chat_id,
             user_id: me.id,
           },
         });
+
+        await setContactData(data)
       };
 
-      const getChatByChatId = async () => {};
-      const getMessagesByChatId = async () => {};
+      const getChatByChatId = async () => {}; //soon
+
+      const getMessagesByChatId = async () => {
+        const { data } = await axios.get(`/messages/by-chat-id`, {
+          params: {
+            chat_id,
+          },
+        });
+
+        await setMessages(data.messages);
+        socket.emit("CHAT:JOIN", { chat_id });
+      };
 
       const getMessagesByContactId = async () => {
-        const { data } = await axios.get(`/messages`, {
+        const { data } = await axios.get(`/messages/by-contact-id`, {
           params: {
             contact_id,
             user_id: me.id,

@@ -12,7 +12,7 @@ router.post("/contact/add", UserController.addContact);
 router.post("/contact/delete", UserController.removeContact);
 router.delete("/user/delete", UserController.deleteUserById);
 
-router.get("/chats/:id", ChatController.getChatsByMemberId);
+router.get("/chats/:id", ChatController.getChatListById);
 router.get("/chat/messages/:id", MessageController.getMessagesByChatId);
 
 router.get("/messages/by-contact-id", MessageController.getMessagesByContactId);

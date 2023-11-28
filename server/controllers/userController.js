@@ -142,7 +142,8 @@ class UserController {
 
   getContact = async (req, res) => {
     try {
-      const user = await UserModel.findOne({ where: { id: req.params.id } });
+      const { id } = req.params;
+      const user = await UserModel.findOne({ where: { id } });
       if (!user) {
         return res.status(404).send("User is not found");
       }
@@ -156,7 +157,7 @@ class UserController {
 
   getContactByChatId = async (req, res) => {
     try {
-      const { chat_id, user_id } = req.body;
+      const { chat_id, user_id } = req.query;
       const contact = await UserService.getContactByChatId(chat_id, user_id)
 
       res.json(contact);
